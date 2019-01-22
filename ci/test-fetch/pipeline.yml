@@ -36,22 +36,6 @@ resources:
     json_key: |
       ((gcp_credentials))
 
-- name: opsman-pivnet
-  type: pivnet
-  source:
-    api_token: ((pivnet_token))
-    product_slug: ops-manager
-    product_version: 2\.4\.(.*) # pin to major version 1
-    sort_by: semver
-
-- name: opsman-product
-  type: google-cloud-storage
-  source:
-    bucket: ((gcs_bucket_name))
-    regexp: OpsManager(.*)onGCP.yml
-    json_key: |
-      ((gcp_credentials))
-
 jobs:
 - name: fetch-platform-automation
   plan:
@@ -64,13 +48,3 @@ jobs:
     - put: platform-automation-image
       params:
         file: platform-automation-pivnet/*image*.tgz
-
-jobs:
-- name: fetch-opsman
-  plan:
-  - get: opsman-pivnet
-    trigger: true
-  - aggregate:
-    - put: opsman-product
-      params:
-        file: opsman-pivnet/OpsManager*.yml
