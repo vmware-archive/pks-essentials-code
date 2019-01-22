@@ -65,7 +65,6 @@ jobs:
       params:
         file: platform-automation-pivnet/*image*.tgz
 
-jobs:
 - name: fetch-opsman
   plan:
   - get: opsman-pivnet
