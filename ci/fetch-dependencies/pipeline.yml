@@ -69,6 +69,8 @@ jobs:
   plan:
   - get: opsman-pivnet
     trigger: true
+    params:
+    - *onGCP.yml
   - aggregate:
     - put: opsman-product
       params:
