@@ -70,7 +70,8 @@ jobs:
   - get: opsman-pivnet
     trigger: true
     params:
-    - *onGCP.yml
+      globs:
+      - *onGCP.yml
   - aggregate:
     - put: opsman-product
       params:
