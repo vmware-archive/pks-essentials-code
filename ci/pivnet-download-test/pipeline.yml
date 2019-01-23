@@ -23,7 +23,3 @@ jobs:
     params:
       globs:
       - "*onGCP.yml"
-  - aggregate:
-    - put: opsman-product
-      params:
-        file: opsman-pivnet/OpsManager*onGCP.yml
