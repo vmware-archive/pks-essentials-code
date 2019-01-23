@@ -26,4 +26,4 @@ jobs:
   - aggregate:
     - put: opsman-product
       params:
-        file: opsman-pivnet/OpsManager*.yml
+        file: opsman-pivnet/OpsManager*onGCP.yml
