@@ -33,14 +33,16 @@ resources:
 - name: configuration
   type: git
   source:
+    username: ((configuration.username))
+    password: ((configuration.password))
     uri: ((configuration.uri))
     branch: master
 
 - name: variable
   type: git
   source:
-    username: amcginlay
-    password: ((variable.private_key))
+    username: ((variable.username))
+    password: ((variable.password))
     uri: ((variable.uri))
     branch: master
 
@@ -73,7 +75,7 @@ jobs:
 #      VARS_FILES: vars/private.yml
       VARS_FILES: vars/((foundation))/vars/opsman-vars.yml
 #     STATE_FILE: ((foundation))/state/state.yml
-#     OPSMAN_CONFIG_FILE: ((foundation))/config/opsman.yml
+      OPSMAN_CONFIG_FILE: ((foundation))/config/opsman.yml
 #     ensure: &make-state-commit
 #       do:
 #         - task: make-commit
