@@ -9,4 +9,4 @@ jobs:
         source: {repository: alpine}
       run:
         path: echo
-        args: ["Hello, world!"]
+        args: ["Hello, Concourse!"]
