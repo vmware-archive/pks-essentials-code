@@ -71,7 +71,7 @@ jobs:
     trigger: true
     params:
       globs:
-      - *onGCP.yml
+      - "*onGCP.yml"
   - aggregate:
     - put: opsman-product
       params:
