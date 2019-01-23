@@ -30,19 +30,19 @@ resources:
     json_key: |
       ((gcp_credentials))
 
-# - name: configuration
-#   type: git
-#   source:
-#     private_key: ((configuration.private_key))
-#     uri: ((configuration.uri))
-#     branch: master
+- name: configuration
+  type: git
+  source:
+    uri: ((configuration.uri))
+    branch: master
 
-# - name: variable
-#   type: git
-#   source:
-#     private_key: ((variable.private_key))
-#     uri: ((variable.uri))
-#     branch: master
+- name: variable
+  type: git
+  source:
+    username: amcginlay
+    password: ((variable.private_key))
+    uri: ((variable.uri))
+    branch: master
 
 jobs:
 - name: install-opsman
@@ -50,34 +50,35 @@ jobs:
   serial_groups: [ install ]
   plan:
   - aggregate:
-    - get: pcf-automation-image
+    - get: platform-automation-image
       params:
         unpack: true
 #     - get: one-time-trigger
 #       trigger: true
-    - get: pcf-automation-tasks
+    - get: platform-automation-tasks
       params:
         unpack: true
     - get: opsman-image
-#     - get: configuration
-#     - get: variable
+    - get: configuration
+    - get: variable
   - task: create-vm
-    image: pcf-automation-image
-    file: pcf-automation-tasks/tasks/create-vm.yml
+    image: platform-automation-image
+    file: platform-automation-tasks/tasks/create-vm.yml
     input_mapping:
       image: opsman-image
-#       state: configuration
-#       config: configuration
-#       vars: variable
-#     params:
-#       VARS_FILES: vars/((foundation))/vars/opsman-vars.yml
-#       STATE_FILE: ((foundation))/state/state.yml
-#       OPSMAN_CONFIG_FILE: ((foundation))/config/opsman.yml
+      state: configuration
+      config: configuration
+      vars: variable
+    params:
+#      VARS_FILES: vars/private.yml
+      VARS_FILES: vars/((foundation))/vars/opsman-vars.yml
+#     STATE_FILE: ((foundation))/state/state.yml
+#     OPSMAN_CONFIG_FILE: ((foundation))/config/opsman.yml
 #     ensure: &make-state-commit
 #       do:
 #         - task: make-commit
-#           image: pcf-automation-image
-#           file: pcf-automation-tasks/tasks/make-git-commit.yml
+#           image: platform-automation-image
+#           file: platform-automation-tasks/tasks/make-git-commit.yml
 #           input_mapping:
 #             repository: configuration
 #             file-source: generated-state
@@ -94,8 +95,8 @@ jobs:
 #             repository: configuration-commit
 #             merge: true
 #   - task: configure-authentication
-#     image: pcf-automation-image
-#     file: pcf-automation-tasks/tasks/configure-authentication.yml
+#     image: platform-automation-image
+#     file: platform-automation-tasks/tasks/configure-authentication.yml
 #     attempts: 10
 #     input_mapping:
 #       env: configuration
@@ -104,8 +105,8 @@ jobs:
 #       ENV_FILE: ((foundation))/env/env.yml
 #       AUTH_CONFIG_FILE: ((foundation))/config/auth.yml
 #   - task: configure-director
-#     image: pcf-automation-image
-#     file: pcf-automation-tasks/tasks/configure-director.yml
+#     image: platform-automation-image
+#     file: platform-automation-tasks/tasks/configure-director.yml
 #     input_mapping:
 #       config: configuration
 #       env: configuration
@@ -115,20 +116,9 @@ jobs:
 #       ENV_FILE: ((foundation))/env/env.yml
 #       DIRECTOR_CONFIG_FILE: ((foundation))/config/director.yml
 #   - task: apply-director-changes
-#     image: pcf-automation-image
-#     file: pcf-automation-tasks/tasks/apply-director-changes.yml
+#     image: platform-automation-image
+#     file: platform-automation-tasks/tasks/apply-director-changes.yml
 #     input_mapping:
 #       env: configuration
 #     params:
 #       ENV_FILE: ((foundation))/env/env.yml
-
-
-
-
-
-
-
-
-
-
-
