@@ -13,8 +13,10 @@ network-properties:
 product-properties:
   .pivotal-container-service.pks_tls:
     value: 
-      cert_pem: ((host.certificate))
-      private_key_pem: ((host.private_key))
+      cert_pem: |
+        ((pks-api-certificate.certificate))
+        ((ca.certificate))
+      private_key_pem: ((pks-api-certificate.private_key))
   .properties.pks_api_hostname:
     value: api.pks.((SUBDOMAIN_NAME)).((DOMAIN_NAME))
   .properties.plan1_selector.active.master_az_placement:
@@ -57,9 +59,15 @@ resource-config:
     - tcp:((SUBDOMAIN_NAME))-pks-api
 
 variables:
-- name: host
+- name: ca
   type: certificate
   options:
+    is_ca: true
+    common_name: PKS Essentials CA
+- name: pks-api-certificate
+  type: certificate
+  options:
+    ca: ca
     common_name: "*.pks.((DOMAIN_NAME))"
     alternative_names:
     - "*.pks.((DOMAIN_NAME))"
