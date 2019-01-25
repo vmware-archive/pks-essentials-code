@@ -33,7 +33,7 @@ resources:
 - name: configuration
   type: google-cloud-storage
   source:
-    bucket: ((gcs_bucket_name_2))
+    bucket: ((gcs_bucket_name))
     regexp: /amcginlay/config/opsman.yml
     json_key: |
       ((gcp_credentials))
@@ -41,7 +41,7 @@ resources:
 - name: variable
   type: google-cloud-storage
   source:
-    bucket: ((gcs_bucket_name_2))
+    bucket: ((gcs_bucket_name))
     regexp: /amcginlay/vars/opsman-vars.yml
     json_key: |
       ((gcp_credentials))
