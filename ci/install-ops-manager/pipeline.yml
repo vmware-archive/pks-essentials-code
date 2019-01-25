@@ -31,20 +31,20 @@ resources:
       ((gcp_credentials))
 
 - name: configuration
-  type: git
+  type: google-cloud-storage
   source:
-    username: ((configuration.username))
-    password: ((configuration.password))
-    uri: ((configuration.uri))
-    branch: master
+    bucket: ((gcs_bucket_name_2))
+    regexp: /amcginlay/config/opsman.yml
+    json_key: |
+      ((gcp_credentials))
 
 - name: variable
-  type: git
+  type: google-cloud-storage
   source:
-    username: ((variable.username))
-    password: ((variable.password))
-    uri: ((variable.uri))
-    branch: master
+    bucket: ((gcs_bucket_name_2))
+    regexp: /amcginlay/vars/opsman-vars.yml
+    json_key: |
+      ((gcp_credentials))
 
 jobs:
 - name: install-opsman
@@ -73,9 +73,9 @@ jobs:
       vars: variable
     params:
 #      VARS_FILES: vars/private.yml
-      VARS_FILES: vars/((foundation))/vars/opsman-vars.yml
+      VARS_FILES: vars/opsman-vars.yml
 #     STATE_FILE: ((foundation))/state/state.yml
-      OPSMAN_CONFIG_FILE: ((foundation))/config/opsman.yml
+      OPSMAN_CONFIG_FILE: opsman.yml
 #     ensure: &make-state-commit
 #       do:
 #         - task: make-commit
