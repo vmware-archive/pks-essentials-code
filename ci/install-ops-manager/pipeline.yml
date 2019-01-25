@@ -48,8 +48,6 @@ resources:
 
 jobs:
 - name: install-opsman
-  serial: true
-  serial_groups: [ install ]
   plan:
   - aggregate:
     - get: platform-automation-image
