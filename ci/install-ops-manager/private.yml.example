@@ -1,11 +1,4 @@
 ---
-foundation: <SUBDOMAIN_NAME>
-configuration:
-  uri: https://github.com/org/repo
-variable:
-  uri: https:https://github.com/org/repo-private
-  private_key: d86...d7ef
-pivnet_token: e32xxxxxxxxxxxxxxxxxxxxxxxxx134e-r
-gcs_bucket_name: <SUBDOMAIN_NAME>-pivnet-artifacts
+gcs_bucket_name: <SUBDOMAIN_NAME>-concourse-resources
 gcp_credentials: |
   {..}
