@@ -55,18 +55,3 @@ resource-config:
   pivotal-container-service:
     elb_names:
     - tcp:((SUBDOMAIN_NAME))-pks-api
-
-variables:
-- name: ca
-  type: certificate
-  options:
-    is_ca: true
-    common_name: PKS Essentials CA
-- name: pks-api-certificate
-  type: certificate
-  options:
-    ca: ca
-    common_name: "*.pks.((DOMAIN_NAME))"
-    alternative_names:
-    - "*.pks.((DOMAIN_NAME))"
-    - localhost
