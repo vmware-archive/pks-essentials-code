@@ -1,14 +1,13 @@
 ---
-properties-configuration:
-  iaas_configuration:
-    project: ((PROJECT_ID))
-    associated_service_account: ((SUBDOMAIN_NAME))-opsman@((PROJECT_ID)).iam.gserviceaccount.com
-    default_deployment_tag: ((SUBDOMAIN_NAME))
-  director_configuration:
-    ntp_servers_string: metadata.google.internal
-    post_deploy_enabled: true
-    resurrector_enabled: true
-    retry_bosh_deploys: true
+iaas-configuration:
+  project: ((PROJECT_ID))
+  associated_service_account: ((SUBDOMAIN_NAME))-opsman@((PROJECT_ID)).iam.gserviceaccount.com
+  default_deployment_tag: ((SUBDOMAIN_NAME))
+director-configuration:
+  ntp_servers_string: metadata.google.internal
+  post_deploy_enabled: true
+  resurrector_enabled: true
+  retry_bosh_deploys: true
 az-configuration:
 - name: us-central1-a
 - name: us-central1-b
