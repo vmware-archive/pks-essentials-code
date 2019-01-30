@@ -1,0 +1,148 @@
+---
+resource_types:
+- name: google-cloud-storage
+  type: docker-image
+  source:
+    repository: frodenas/gcs-resource
+
+resources:
+- name: platform-automation-tasks
+  type: google-cloud-storage
+  source:
+    bucket: ((gcs_bucket_name))
+    regexp: platform-automation-tasks-(.*).zip
+    json_key: |
+      ((gcp_credentials))
+
+- name: platform-automation-image
+  type: google-cloud-storage
+  source:
+    bucket: ((gcs_bucket_name))
+    regexp: platform-automation-image-(.*).tgz
+    json_key: |
+      ((gcp_credentials))
+
+- name: opsman-image
+  type: google-cloud-storage
+  source:
+    bucket: ((gcs_bucket_name))
+    regexp: OpsManager(.*)onGCP.yml
+    json_key: |
+      ((gcp_credentials))
+
+- name: opsman-config
+  type: google-cloud-storage
+  source:
+    bucket: ((gcs_bucket_name))
+    versioned_file: opsman.yml
+    json_key: |
+      ((gcp_credentials))
+
+- name: env-config
+  type: google-cloud-storage
+  source:
+    bucket: ((gcs_bucket_name))
+    versioned_file: env.yml
+    json_key: |
+      ((gcp_credentials))
+
+- name: auth-config
+  type: google-cloud-storage
+  source:
+    bucket: ((gcs_bucket_name))
+    versioned_file: auth.yml
+    json_key: |
+      ((gcp_credentials))
+
+- name: variable
+  type: google-cloud-storage
+  source:
+    bucket: ((gcs_bucket_name))
+    versioned_file: opsman-vars.yml
+    json_key: |
+      ((gcp_credentials))
+
+- name: pks-essentials-code
+  type: git
+  source:
+    uri: https://github.com/platform-acceleration-lab/pks-essentials-code.git
+    # branch: master
+    branch: pks-install-163451013
+
+jobs:
+- name: install-opsman
+  plan:
+  - aggregate:
+    - get: platform-automation-image
+      params:
+        unpack: true
+    - get: platform-automation-tasks
+      params:
+        unpack: true
+    - get: opsman-image
+    - get: opsman-config
+    - get: variable
+  - task: create-vm
+    image: platform-automation-image
+    file: platform-automation-tasks/tasks/create-vm.yml
+    input_mapping:
+      image: opsman-image
+      state: opsman-config
+      config: opsman-config
+      vars: variable
+    params:
+      VARS_FILES: vars/opsman-vars.yml
+      OPSMAN_CONFIG_FILE: opsman.yml
+
+- name: configure-authentication
+  plan:
+  - aggregate:
+    - get: platform-automation-image
+      passed: [install-opsman]
+      params:
+        unpack: true
+    - get: platform-automation-tasks
+      params:
+        unpack: true
+    - get: env-config
+    - get: auth-config
+  - task: configure-authentication
+    image: platform-automation-image
+    file: platform-automation-tasks/tasks/configure-authentication.yml
+    input_mapping:
+      env: env-config
+      config: auth-config
+    params:
+      ENV_FILE: env.yml
+      AUTH_CONFIG_FILE: auth.yml
+
+- name: configure-director
+  plan:
+  - aggregate:
+    - get: platform-automation-image
+      passed: [configure-authentication]
+      params:
+        unpack: true
+    - get: platform-automation-tasks
+      params:
+        unpack: true
+    - get: env-config
+    - get: pks-essentials-code
+    - get: variable
+    - get: opsman-config
+  - task: configure-director
+    image: platform-automation-image
+    file: platform-automation-tasks/tasks/configure-director.yml
+    input_mapping:
+      env: env-config
+      config: pks-essentials-code
+      vars: variable
+      secrets: opsman-config
+    params:
+      ENV_FILE: env.yml
+      DIRECTOR_CONFIG_FILE: config/director.yml
+      VARS_FILES: |
+        vars/opsman-vars.yml
+        secrets/opsman.yml
+
+# - name: configure-pks
