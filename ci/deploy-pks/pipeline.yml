@@ -66,8 +66,7 @@ resources:
   type: git
   source:
     uri: https://github.com/platform-acceleration-lab/pks-essentials-code.git
-    # branch: master
-    branch: pks-install-163451013
+    branch: master
 
 jobs:
 - name: install-opsman
