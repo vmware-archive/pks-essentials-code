@@ -1,7 +1,6 @@
 ---
 iaas-configuration:
   project: ((PROJECT_ID))
-  associated_service_account: ((SUBDOMAIN_NAME))-opsman@((PROJECT_ID)).iam.gserviceaccount.com
   default_deployment_tag: ((SUBDOMAIN_NAME))
   auth_json: ((opsman-configuration.gcp.gcp_service_account))
 director-configuration:
