@@ -46,7 +46,7 @@ resources:
     json_key: |
       ((gcp_credentials))
 
-- name: env-config
+- name: env
   type: google-cloud-storage
   source:
     bucket: ((gcs_bucket_name))
@@ -89,6 +89,8 @@ jobs:
     - get: opsman-image
     - get: opsman-config
     - get: variable
+    - get: env
+    - get: auth-config
   - task: create-vm
     image: platform-automation-image
     file: platform-automation-tasks/tasks/create-vm.yml
@@ -100,24 +102,12 @@ jobs:
     params:
       VARS_FILES: vars/opsman-vars.yml
       OPSMAN_CONFIG_FILE: opsman.yml
-
-- name: configure-authentication
-  plan:
-  - aggregate:
-    - get: platform-automation-image
-      passed: [install-opsman]
-      params:
-        unpack: true
-    - get: platform-automation-tasks
-      params:
-        unpack: true
-    - get: env-config
-    - get: auth-config
   - task: configure-authentication
-    image: platform-automation-image
-    file: platform-automation-tasks/tasks/configure-authentication.yml
+    image: pcf-automation-image
+    file: pcf-automation-tasks/tasks/configure-authentication.yml
+    attempts: 10
     input_mapping:
-      env: env-config
+      env: env
       config: auth-config
     params:
       ENV_FILE: env.yml
@@ -127,7 +117,7 @@ jobs:
   plan:
   - aggregate:
     - get: platform-automation-image
-      passed: [configure-authentication]
+      passed: [install-opsman]
       params:
         unpack: true
     - get: platform-automation-tasks
