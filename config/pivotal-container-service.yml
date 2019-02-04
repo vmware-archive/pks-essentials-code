@@ -12,9 +12,9 @@ network-properties:
     name: pks-services
 product-properties:
   .pivotal-container-service.pks_tls:
-    value: 
-      cert_pem: ((pks-api-certificate.certificate))((ca.certificate))
-      private_key_pem: ((pks-api-certificate.private_key))
+    value:
+      cert_pem: ((DOMAIN_CRT))
+      private_key_pem: ((DOMAIN_KEY))
   .properties.pks_api_hostname:
     value: api.pks.((SUBDOMAIN_NAME)).((DOMAIN_NAME))
   .properties.plan1_selector.active.master_az_placement:
