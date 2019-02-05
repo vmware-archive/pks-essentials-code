@@ -5,9 +5,9 @@ course.
 
 ## Environmental pre-requisites
 
-Accounts and programs you will need to have
+Accounts and programs you will need to have.
 
-### A Google or Gmail account
+### A Google or Gmail account
 
 At the start of the PKS Fundamental course, the instructor will grant
 you access to a Google Cloud Platform project that is managed by
