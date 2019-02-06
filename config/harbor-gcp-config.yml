@@ -35,11 +35,11 @@ network-properties:
   network:
     name: pks-services
   other_availability_zones:
-  - name: ((AZ_1))
-  - name: ((AZ_2))
-  - name: ((AZ_3))
+  - name: us-central1-a
+  - name: us-central1-b
+  - name: us-central1-c
   singleton_availability_zone:
-    name: ((AZ_1))
+    name: us-central1-a
 resource-config:
   harbor-app:
     instances: automatic
