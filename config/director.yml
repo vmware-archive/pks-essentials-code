@@ -53,6 +53,9 @@ network-assignment:
     name: infrastructure
   singleton_availability_zone:
     name: us-central1-a
+security-configuration:
+  generate_vm_passwords: true
+  opsmanager_root_ca_trusted_certs: true
 resource-configuration:
   compilation:
     instances: 8
