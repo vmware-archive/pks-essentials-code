@@ -1,7 +1,11 @@
+# A pipeline has one or more named jobs
 jobs:
 - name: greet
+  # A jobs has a plan which is a sequence of steps
   plan:
   - task: say-hello
+    # A task is one kind of step
+    # It runs a command in a container
     config:
       platform: linux
       image_resource:

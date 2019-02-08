@@ -1,4 +1,6 @@
 ---
+# This pipeline does the first part of the Ops Manager installation.
+# It downloads the Ops Manager image and creates a new VM using it.
 resource_types:
 - name: google-cloud-storage
   type: docker-image
@@ -31,6 +33,8 @@ resources:
       ((gcp_credentials))
 
 - name: configuration
+  # This is the overall configuration that specifies aspects of
+  # the OpsMan VM, network and size.
   type: google-cloud-storage
   source:
     bucket: ((gcs_bucket_name))
@@ -39,6 +43,8 @@ resources:
       ((gcp_credentials))
 
 - name: variable
+  # This provides variable definitions that can be substituted into
+  # the overall configuration.
   type: google-cloud-storage
   source:
     bucket: ((gcs_bucket_name))

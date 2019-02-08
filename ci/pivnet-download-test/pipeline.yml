@@ -1,4 +1,13 @@
 ---
+# Pipelines use "resources" to interact with the outside world.
+# There are a number of built-in resources, and Concourse can
+# be extended by adding additional resource types.
+
+# We need to fetch files from PivNet, so need to add a resource
+# type that can interact with it.
+#
+# This pipeline uses that resource to fetch a file from PivNet to
+# validate access.
 resource_types:
 - name: pivnet
   type: docker-image
@@ -10,9 +19,9 @@ resources:
 - name: opsman-pivnet
   type: pivnet
   source:
-    api_token: ((pivnet_token))
+    api_token: ((pivnet_token)) # This inserts the value of a 'pivnet_token' variable
     product_slug: ops-manager
-    product_version: 2\.4\.(.*) # pin to version 2.4.x
+    product_version: 2\.4\.(.*) # Selects version 2.4.x
     sort_by: semver
 
 jobs:
