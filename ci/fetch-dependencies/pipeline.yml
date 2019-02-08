@@ -21,8 +21,8 @@ resource_types:
 # Below we define all of the resources that we need to download into
 # our environment for use in the course.
 resources:
-# This is the source of the Concourse automation task defintions
 - name: platform-automation-pivnet
+  # This is the source of the Concourse automation task defintions
   type: pivnet
   source:
     api_token: ((pivnet_token))
@@ -38,16 +38,14 @@ resources:
   source:
     bucket: ((gcs_bucket_name))
     regexp: platform-automation-tasks-(1.*).zip
-    json_key: |
-      ((gcp_credentials))
+    json_key: ((gcp_credentials))
 
 - name: platform-automation-image
   type: google-cloud-storage
   source:
     bucket: ((gcs_bucket_name))
     regexp: platform-automation-image-(1.*).tgz
-    json_key: |
-      ((gcp_credentials))
+    json_key: ((gcp_credentials))
 
 # These are the Ops Manager source and target location
 - name: opsman-pivnet
@@ -63,8 +61,7 @@ resources:
   source:
     bucket: ((gcs_bucket_name))
     regexp: OpsManager(.*)onGCP.yml
-    json_key: |
-      ((gcp_credentials))
+    json_key: ((gcp_credentials))
 
 # These are the Harbor source and target location
 - name: harbor-pivnet
@@ -80,8 +77,7 @@ resources:
   source:
     bucket: ((gcs_bucket_name))
     regexp: harbor-container-registry-(.*).pivotal
-    json_key: |
-      ((gcp_credentials))
+    json_key: ((gcp_credentials))
 
 # These are the PKS source and target locations
 - name: pks-pivnet
@@ -97,8 +93,7 @@ resources:
   source:
     bucket: ((gcs_bucket_name))
     regexp: pivotal-container-service-(.*).pivotal
-    json_key: |
-      ((gcp_credentials))
+    json_key: ((gcp_credentials))
 
 
 # These are the jobs that actually fetch and store the resources defined

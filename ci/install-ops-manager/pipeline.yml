@@ -13,24 +13,21 @@ resources:
   source:
     bucket: ((gcs_bucket_name))
     regexp: platform-automation-tasks-(.*).zip
-    json_key: |
-      ((gcp_credentials))
+    json_key: ((gcp_credentials))
 
 - name: platform-automation-image
   type: google-cloud-storage
   source:
     bucket: ((gcs_bucket_name))
     regexp: platform-automation-image-(.*).tgz
-    json_key: |
-      ((gcp_credentials))
+    json_key: ((gcp_credentials))
 
 - name: opsman-image
   type: google-cloud-storage
   source:
     bucket: ((gcs_bucket_name))
     regexp: OpsManager(.*)onGCP.yml
-    json_key: |
-      ((gcp_credentials))
+    json_key: ((gcp_credentials))
 
 - name: configuration
   # This is the overall configuration that specifies aspects of
@@ -39,8 +36,7 @@ resources:
   source:
     bucket: ((gcs_bucket_name))
     versioned_file: opsman.yml
-    json_key: |
-      ((gcp_credentials))
+    json_key: ((gcp_credentials))
 
 - name: variable
   # This provides variable definitions that can be substituted into
@@ -49,8 +45,7 @@ resources:
   source:
     bucket: ((gcs_bucket_name))
     versioned_file: opsman-vars.yml
-    json_key: |
-      ((gcp_credentials))
+    json_key: ((gcp_credentials))
 
 jobs:
 - name: install-opsman
