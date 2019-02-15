@@ -243,7 +243,6 @@ jobs:
     - get: platform-automation-image
       params:
         unpack: true
-      trigger: true
     - get: platform-automation-tasks
       params:
         unpack: true
