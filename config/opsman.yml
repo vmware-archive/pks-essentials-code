@@ -6,8 +6,8 @@ opsman-configuration:
     region: us-central1
     zone: us-central1-a
     vm_name: ops-manager-vm
-    vpc_subnet: ((PKS_SUBDOMAIN_NAME))-infrastructure-subnet
-    tags: ((PKS_SUBDOMAIN_NAME))-ops-manager-external
+    vpc_subnet: ((SUBDOMAIN_NAME))-infrastructure-subnet
+    tags: ((SUBDOMAIN_NAME))-ops-manager-external
     custom_cpu: 2
     custom_memory: 8
     boot_disk_size: 200
