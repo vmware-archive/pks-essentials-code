@@ -91,9 +91,8 @@ jobs:
   - aggregate:
     - get: env
     - get: auth-config
-    - get: configuration
-      passed: [install-opsman]
     - get: platform-automation-image
+      passed: [install-opsman]
       params:
         unpack: true
     - get: platform-automation-tasks
