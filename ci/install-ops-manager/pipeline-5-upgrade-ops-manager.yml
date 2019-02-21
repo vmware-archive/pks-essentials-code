@@ -30,6 +30,14 @@ resources:
     json_key: |
       ((gcp_credentials))
 
+- name: configuration
+  type: google-cloud-storage
+  source:
+    bucket: ((gcs_bucket_name))
+    versioned_file: opsman.yml
+    json_key: |
+      ((gcp_credentials))
+
 - name: variable
   type: google-cloud-storage
   source:
@@ -95,19 +103,19 @@ jobs:
       params:
         unpack: true
     - get: opsman-image
-    - get: pks-essentials-code
+    - get: configuration
     - get: variable
   - task: create-vm
     image: platform-automation-image
     file: platform-automation-tasks/tasks/create-vm.yml
     input_mapping:
       image: opsman-image
-      state: pks-essentials-code
-      config: pks-essentials-code
+      state: configuration
+      config: configuration
       vars: variable
     params:
       VARS_FILES: vars/opsman-vars.yml
-      OPSMAN_CONFIG_FILE: config/opsman.yml
+      OPSMAN_CONFIG_FILE: opsman.yml
 - name: configure-authentication
   plan:
   - aggregate:
@@ -143,6 +151,7 @@ jobs:
     - get: env
     - get: pks-essentials-code
     - get: variable
+    - get: configuration
   - task: configure-director
     image: platform-automation-image
     file: platform-automation-tasks/tasks/configure-director.yml
@@ -150,10 +159,13 @@ jobs:
       env: env
       config: pks-essentials-code
       vars: variable
+      secrets: configuration
     params:
       ENV_FILE: env.yml
       DIRECTOR_CONFIG_FILE: config/director.yml
-      VARS_FILES: vars/opsman-vars.yml
+      VARS_FILES: |
+        vars/opsman-vars.yml
+        secrets/opsman.yml
   - task: apply-changes
     image: platform-automation-image
     file: platform-automation-tasks/tasks/apply-director-changes.yml
@@ -238,7 +250,7 @@ jobs:
     - get: installation
       passed: [ export-installation ]
     - get: env
-    - get: pks-essentials-code
+    - get: configuration
     - get: state
     - get: variable
   - task: upgrade-opsman
@@ -248,12 +260,12 @@ jobs:
       env: env
       image: opsman-image
       state: state
-      config: pks-essentials-code
+      config: configuration
       vars: variable
     params:
       VARS_FILES: vars/opsman-vars.yml
       ENV_FILE: env.yml
-      OPSMAN_CONFIG_FILE: config/opsman.yml
+      OPSMAN_CONFIG_FILE: opsman.yml
       STATE_FILE: state.yml
   - task: apply-director-changes
     image: platform-automation-image

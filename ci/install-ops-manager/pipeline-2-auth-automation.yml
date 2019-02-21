@@ -30,6 +30,14 @@ resources:
     json_key: |
       ((gcp_credentials))
 
+- name: configuration
+  type: google-cloud-storage
+  source:
+    bucket: ((gcs_bucket_name))
+    versioned_file: opsman.yml
+    json_key: |
+      ((gcp_credentials))
+
 - name: variable
   type: google-cloud-storage
   source:
@@ -54,12 +62,6 @@ resources:
     json_key: |
       ((gcp_credentials))
 
-- name: pks-essentials-code
-  type: git
-  source:
-    uri: https://github.com/platform-acceleration-lab/pks-essentials-code.git
-    branch: master
-
 jobs:
 - name: install-opsman
   plan:
@@ -71,19 +73,19 @@ jobs:
       params:
         unpack: true
     - get: opsman-image
-    - get: pks-essentials-code
+    - get: configuration
     - get: variable
   - task: create-vm
     image: platform-automation-image
     file: platform-automation-tasks/tasks/create-vm.yml
     input_mapping:
       image: opsman-image
-      state: pks-essentials-code
-      config: pks-essentials-code
+      state: configuration
+      config: configuration
       vars: variable
     params:
       VARS_FILES: vars/opsman-vars.yml
-      OPSMAN_CONFIG_FILE: config/opsman.yml
+      OPSMAN_CONFIG_FILE: opsman.yml
 - name: configure-authentication  
   plan:    
   - aggregate:
