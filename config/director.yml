@@ -2,7 +2,7 @@
 iaas-configuration:
   project: ((PROJECT_ID))
   default_deployment_tag: ((SUBDOMAIN_NAME))
-  auth_json: ((GCP_CREDENTIALS))
+  auth_json: ((opsman-configuration.gcp.gcp_service_account))
 director-configuration:
   ntp_servers_string: metadata.google.internal
   post_deploy_enabled: true
