@@ -44,6 +44,22 @@ resources:
     product_version: 2\.(.*)
     sort_by: semver
 
+- name: platform-automation-tasks
+  type: gcs
+  source:
+    regexp: platform-automation-tasks-(.*).zip
+    bucket: ((gcs-bucket))
+    json_key: |
+      ((gcp-credentials))
+
+- name: platform-automation-image
+  type: gcs
+  source:
+    regexp: platform-automation-image-(.*).tgz
+    bucket: ((gcs-bucket))
+    json_key: |
+      ((gcp-credentials))
+
 - name: opsman-product
   type: gcs
   source:
@@ -80,22 +96,6 @@ resources:
   type: gcs
   source:
     regexp: harbor-stemcell/light-bosh-stemcell-(.*)-google.*\.tgz
-    bucket: ((gcs-bucket))
-    json_key: |
-      ((gcp-credentials))
-
-- name: platform-automation-tasks
-  type: gcs
-  source:
-    regexp: platform-automation-tasks-(.*).zip
-    bucket: ((gcs-bucket))
-    json_key: |
-      ((gcp-credentials))
-
-- name: platform-automation-image
-  type: gcs
-  source:
-    regexp: platform-automation-image-(.*).tgz
     bucket: ((gcs-bucket))
     json_key: |
       ((gcp-credentials))
