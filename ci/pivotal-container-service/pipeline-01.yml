@@ -1,0 +1,104 @@
+---
+resource_types:
+- name: pivnet
+  type: docker-image
+  source:
+    repository: pivotalcf/pivnet-resource
+    tag: latest-final
+
+- name: gcs
+  type: docker-image
+  source:
+    repository: frodenas/gcs-resource
+
+resources:
+- name: daily-trigger
+  type: time
+  source:
+    interval: 24h
+
+- name: one-time-trigger
+  type: time
+  source:
+    interval: 999999h
+
+- name: platform-automation-pivnet
+  type: pivnet
+  source:
+    api_token: ((pivnet-token))
+    product_slug: platform-automation
+    product_version: 2\.(.*)
+    sort_by: semver
+
+- name: opsman-product
+  type: gcs
+  source:
+    regexp: OpsManager(.*)onGCP.yml
+    bucket: ((gcs-bucket))
+    json_key: |
+      ((gcp-credentials))
+
+- name: platform-automation-tasks
+  type: gcs
+  source:
+    regexp: platform-automation-tasks-(.*).zip
+    bucket: ((gcs-bucket))
+    json_key: |
+      ((gcp-credentials))
+
+- name: platform-automation-image
+  type: gcs
+  source:
+    regexp: platform-automation-image-(.*).tgz
+    bucket: ((gcs-bucket))
+    json_key: |
+      ((gcp-credentials))
+
+jobs:
+- name: fetch-opsman
+  plan:
+  - aggregate:
+    - get: daily-trigger
+      trigger: true
+    - get: platform-automation-image
+      params:
+        unpack: true
+    - get: platform-automation-tasks
+      params:
+        unpack: true
+    - get: config
+  - task: credhub-interpolate-config
+    image: platform-automation-image
+    file: platform-automation-tasks/tasks/credhub-interpolate.yml
+    params:
+      CREDHUB_CA_CERT: ((credhub-ca-cert))
+      CREDHUB_CLIENT: ((credhub-client))
+      CREDHUB_SECRET: ((credhub-secret))
+      CREDHUB_SERVER: ((credhub-server))
+      PREFIX: /
+      INTERPOLATION_PATH: config
+    input_mapping:
+      files: config
+    output_mapping:
+      interpolated-files: config
+  - task: download-opsman-image
+    image: platform-automation-image
+    file: platform-automation-tasks/tasks/download-product.yml
+    params:
+      CONFIG_FILE: config/ops-manager/2.4/gcp/((product-slug))/config-pivnet.yml
+  - aggregate:
+    - put: opsman-product
+      params:
+        file: downloaded-product/*
+
+- name: fetch-platform-automation
+  plan:
+  - get: platform-automation-pivnet
+    trigger: true
+  - aggregate:
+    - put: platform-automation-tasks
+      params:
+        file: platform-automation-pivnet/*tasks*.zip
+    - put: platform-automation-image
+      params:
+        file: platform-automation-pivnet/*image*.tgz
