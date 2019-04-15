@@ -17,6 +17,12 @@ resources:
   source:
     interval: 24h
 
+- name: config
+  type: git
+  source:
+    uri: ((config-uri))
+    branch: master
+
 - name: platform-automation-pivnet
   type: pivnet
   source:
