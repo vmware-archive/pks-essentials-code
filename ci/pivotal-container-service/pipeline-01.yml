@@ -17,11 +17,6 @@ resources:
   source:
     interval: 24h
 
-- name: one-time-trigger
-  type: time
-  source:
-    interval: 999999h
-
 - name: platform-automation-pivnet
   type: pivnet
   source:
