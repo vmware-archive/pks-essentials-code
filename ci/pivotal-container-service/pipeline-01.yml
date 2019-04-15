@@ -31,14 +31,6 @@ resources:
     product_version: 2\.(.*)
     sort_by: semver
 
-- name: opsman-product
-  type: gcs
-  source:
-    regexp: OpsManager(.*)onGCP.yml
-    bucket: ((gcs-bucket))
-    json_key: |
-      ((gcp-credentials))
-
 - name: platform-automation-tasks
   type: gcs
   source:
@@ -51,6 +43,30 @@ resources:
   type: gcs
   source:
     regexp: platform-automation-image-(.*).tgz
+    bucket: ((gcs-bucket))
+    json_key: |
+      ((gcp-credentials))
+
+- name: opsman-product
+  type: gcs
+  source:
+    regexp: OpsManager(.*)onGCP.yml
+    bucket: ((gcs-bucket))
+    json_key: |
+      ((gcp-credentials))
+
+- name: pks-product
+  type: gcs
+  source:
+    regexp: pivotal-container-service-(.*).pivotal
+    bucket: ((gcs-bucket))
+    json_key: |
+      ((gcp-credentials))
+
+- name: pks-stemcell
+  type: gcs
+  source:
+    regexp: pks-stemcell/light-bosh-stemcell-(.*)-google.*\.tgz
     bucket: ((gcs-bucket))
     json_key: |
       ((gcp-credentials))
