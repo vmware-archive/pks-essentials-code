@@ -114,7 +114,7 @@ jobs:
     image: platform-automation-image
     file: platform-automation-tasks/tasks/download-product.yml
     params:
-      CONFIG_FILE: config/ops-manager/config-pivnet.yml
+      CONFIG_FILE: config-01/ops-manager/config-pivnet.yml
   - aggregate:
     - put: opsman-product
       params:
@@ -150,7 +150,7 @@ jobs:
     image: platform-automation-image
     file: platform-automation-tasks/tasks/download-product.yml
     params:
-      CONFIG_FILE: config/pivotal-container-service/config-pivnet.yml
+      CONFIG_FILE: config-01/pivotal-container-service/config-pivnet.yml
     output_mapping: {downloaded-stemcell: pks-stemcell}
   - aggregate:
     - put: pks-product
