@@ -105,7 +105,7 @@ jobs:
       CREDHUB_SECRET: ((credhub-secret))
       CREDHUB_SERVER: ((credhub-server))
       PREFIX: /
-      INTERPOLATION_PATH: config
+      INTERPOLATION_PATH: config-01
     input_mapping:
       files: config
     output_mapping:
@@ -141,7 +141,7 @@ jobs:
       CREDHUB_SECRET: ((credhub-secret))
       CREDHUB_SERVER: ((credhub-server))
       PREFIX: /
-      INTERPOLATION_PATH: config
+      INTERPOLATION_PATH: config-01
     input_mapping:
       files: config
     output_mapping:
