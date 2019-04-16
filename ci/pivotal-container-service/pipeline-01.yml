@@ -104,7 +104,7 @@ jobs:
       CREDHUB_CLIENT: ((credhub-client))
       CREDHUB_SECRET: ((credhub-secret))
       CREDHUB_SERVER: ((credhub-server))
-      PREFIX: /
+      PREFIX: /concourse/main
       INTERPOLATION_PATH: ((config-dir))
     input_mapping:
       files: config
@@ -140,7 +140,7 @@ jobs:
       CREDHUB_CLIENT: ((credhub-client))
       CREDHUB_SECRET: ((credhub-secret))
       CREDHUB_SERVER: ((credhub-server))
-      PREFIX: /
+      PREFIX: /concourse/main
       INTERPOLATION_PATH: ((config-dir))
     input_mapping:
       files: config
