@@ -53,6 +53,6 @@ properties-configuration:
   iaas_configuration:
     project: ((gcp-project-id))
     default_deployment_tag: ((subdomain-name))
-    auth_json: ((gcp-credenti    auth_jsoce    auth_jsion:
+    auth_json: ((gcp-credentials))
   compilation:
     instances: 8
