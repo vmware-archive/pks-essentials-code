@@ -86,6 +86,22 @@ resources:
     json_key: |
       ((gcp-credentials))
 
+- name: harbor-product
+  type: gcs
+  source:
+    regexp: harbor-container-registry-(.*).pivotal
+    bucket: ((gcs-bucket))
+    json_key: |
+      ((gcp-credentials))
+
+- name: harbor-stemcell
+  type: gcs
+  source:
+    regexp: harbor-stemcell/light-bosh-stemcell-(.*)-google.*\.tgz
+    bucket: ((gcs-bucket))
+    json_key: |
+      ((gcp-credentials))
+
 jobs:
 - name: fetch-platform-automation
   plan:
@@ -174,6 +190,46 @@ jobs:
     - put: pks-stemcell
       params:
         file: pks-stemcell/*.tgz
+
+- name: fetch-harbor
+  plan:
+  - aggregate:
+    - get: daily-trigger
+      trigger: true
+    - get: platform-automation-image
+      params:
+        unpack: true
+    - get: platform-automation-tasks
+      params:
+        unpack: true
+    - get: config
+  - task: credhub-interpolate-config
+    image: platform-automation-image
+    file: platform-automation-tasks/tasks/credhub-interpolate.yml
+    params:
+      CREDHUB_CA_CERT: ((credhub-ca-cert))
+      CREDHUB_CLIENT: ((credhub-client))
+      CREDHUB_SECRET: ((credhub-secret))
+      CREDHUB_SERVER: ((credhub-server))
+      PREFIX: /concourse/main
+      INTERPOLATION_PATH: config
+    input_mapping:
+      files: config
+    output_mapping:
+      interpolated-files: config
+  - task: download-harbor-product-and-stemcell
+    image: platform-automation-image
+    file: platform-automation-tasks/tasks/download-product.yml
+    params:
+      CONFIG_FILE: ((config-dir))/harbor-container-registry/config-pivnet.yml
+    output_mapping: {downloaded-stemcell: harbor-stemcell}
+  - aggregate:
+    - put: harbor-product
+      params:
+        file: downloaded-product/*.pivotal
+    - put: harbor-stemcell
+      params:
+        file: harbor-stemcell/*.tgz
 
 - name: install-opsman
   serial: true
@@ -290,6 +346,51 @@ jobs:
       ENV_FILE: ((config-dir))/ops-manager/env.yml
       CONFIG_FILE: ((config-dir))/pivotal-container-service/config.yml
 
+- name: upload-and-configure-harbor
+  plan:
+  - aggregate:
+    - get: platform-automation-image
+      passed:
+      - install-opsman
+      trigger: true
+      params:
+        unpack: true
+    - get: platform-automation-tasks
+      params:
+        unpack: true
+    - get: config
+    - get: harbor-product
+  - task: credhub-interpolate-config
+    image: platform-automation-image
+    file: platform-automation-tasks/tasks/credhub-interpolate.yml
+    params:
+      CREDHUB_CA_CERT: ((credhub-ca-cert))
+      CREDHUB_CLIENT: ((credhub-client))
+      CREDHUB_SECRET: ((credhub-secret))
+      CREDHUB_SERVER: ((credhub-server))
+      PREFIX: /concourse/main
+      INTERPOLATION_PATH: ((config-dir))
+    input_mapping:
+      files: config
+    output_mapping:
+      interpolated-files: config
+  - task: upload-and-stage-harbor
+    image: platform-automation-image
+    file: platform-automation-tasks/tasks/upload-and-stage-product.yml
+    input_mapping:
+      env: config
+      product: harbor-product
+    params:
+      ENV_FILE: ((config-dir))/ops-manager/env.yml
+  - task: configure-harbor
+    image: platform-automation-image
+    file: platform-automation-tasks/tasks/configure-product.yml
+    input_mapping:
+      env: config
+    params:
+      ENV_FILE: ((config-dir))/ops-manager/env.yml
+      CONFIG_FILE: ((config-dir))/harbor-container-registry/config.yml
+
 - name: apply-product-changes
   serial: true
   plan:
@@ -299,6 +400,7 @@ jobs:
         unpack: true
       passed:
       - upload-and-configure-pks
+      - upload-and-configure-harbor
       trigger: true
     - get: platform-automation-tasks
       params:
