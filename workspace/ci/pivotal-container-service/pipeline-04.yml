@@ -257,6 +257,20 @@ jobs:
         unpack: true
     - get: config
     - get: pks-product
+  - task: credhub-interpolate-config
+    image: platform-automation-image
+    file: platform-automation-tasks/tasks/credhub-interpolate.yml
+    params:
+      CREDHUB_CA_CERT: ((credhub-ca-cert))
+      CREDHUB_CLIENT: ((credhub-client))
+      CREDHUB_SECRET: ((credhub-secret))
+      CREDHUB_SERVER: ((credhub-server))
+      PREFIX: /concourse/main
+      INTERPOLATION_PATH: ((config-dir))
+    input_mapping:
+      files: config
+    output_mapping:
+      interpolated-files: config
   - task: upload-and-stage-pks
     image: platform-automation-image
     file: platform-automation-tasks/tasks/upload-and-stage-product.yml
