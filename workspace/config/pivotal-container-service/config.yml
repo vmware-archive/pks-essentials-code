@@ -14,8 +14,8 @@ network-properties:
 product-properties:
   .pivotal-container-service.pks_tls:
     value:
-      cert_pem: ((domain-crt))
-      private_key_pem: ((domain-key))
+      cert_pem: ((pks-cert.certificate))
+      private_key_pem: ((pks-cert.private_key))
   .properties.pks_api_hostname:
     value: api.pks.((subdomain-name)).((domain-name))
   .properties.plan1_selector.active.master_az_placement:
