@@ -39,12 +39,12 @@ resources:
     sort_by: semver
 
 - name: installation
-  type: google-cloud-storage
+  type: gcs
   source:
-    bucket: ((gcs_bucket_name))
+    bucket: ((gcs-bucket))
     regexp: installation-(.*).zip
     json_key: |
-      ((gcp_credentials))
+      ((gcp-credentials))
 
 - name: state
   type: gcs
