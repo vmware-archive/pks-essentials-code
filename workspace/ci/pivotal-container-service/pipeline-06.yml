@@ -442,6 +442,7 @@ jobs:
   plan:
   - aggregate:
     - get: platform-automation-image
+      trigger: true
       passed:
       - install-opsman
       params:
@@ -488,6 +489,7 @@ jobs:
         unpack: true
     - get: opsman-product
     - get: installation
+      trigger: true
       passed:
       - export-installation
     - get: config
