@@ -54,5 +54,7 @@ properties-configuration:
     project: ((gcp-project-id))
     default_deployment_tag: ((subdomain-name))
     auth_json: ((gcp-credentials))
+  security_configuration:
+    trusted_certificates: ((pks-cert.ca))
   compilation:
     instances: 8
