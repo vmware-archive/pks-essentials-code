@@ -31,4 +31,4 @@ jobs:
     trigger: true
     params:
       globs:
-      - "*onGCP.yml" # This expression uniquely identifies the target in the file group
+      - *-gcp-*.yml # This expression uniquely identifies the target in the file group
