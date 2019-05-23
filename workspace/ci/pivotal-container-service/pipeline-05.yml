@@ -127,7 +127,8 @@ jobs:
       params:
         unpack: true
     - get: config
-  - task: credhub-interpolate-config
+  - &credhub-interpolate-config
+    task: credhub-interpolate-config
     image: platform-automation-image
     file: platform-automation-tasks/tasks/credhub-interpolate.yml
     params:
@@ -163,20 +164,7 @@ jobs:
       params:
         unpack: true
     - get: config
-  - task: credhub-interpolate-config
-    image: platform-automation-image
-    file: platform-automation-tasks/tasks/credhub-interpolate.yml
-    params:
-      CREDHUB_CA_CERT: ((credhub-ca-cert))
-      CREDHUB_CLIENT: ((credhub-client))
-      CREDHUB_SECRET: ((credhub-secret))
-      CREDHUB_SERVER: ((credhub-server))
-      PREFIX: /concourse/main
-      INTERPOLATION_PATH: ((config-dir))
-    input_mapping:
-      files: config
-    output_mapping:
-      interpolated-files: config
+  - *credhub-interpolate-config
   - task: download-pks-product-and-stemcell
     image: platform-automation-image
     file: platform-automation-tasks/tasks/download-product.yml
@@ -203,20 +191,7 @@ jobs:
       params:
         unpack: true
     - get: config
-  - task: credhub-interpolate-config
-    image: platform-automation-image
-    file: platform-automation-tasks/tasks/credhub-interpolate.yml
-    params:
-      CREDHUB_CA_CERT: ((credhub-ca-cert))
-      CREDHUB_CLIENT: ((credhub-client))
-      CREDHUB_SECRET: ((credhub-secret))
-      CREDHUB_SERVER: ((credhub-server))
-      PREFIX: /concourse/main
-      INTERPOLATION_PATH: config
-    input_mapping:
-      files: config
-    output_mapping:
-      interpolated-files: config
+  - *credhub-interpolate-config
   - task: download-harbor-product-and-stemcell
     image: platform-automation-image
     file: platform-automation-tasks/tasks/download-product.yml
@@ -247,20 +222,7 @@ jobs:
     - get: opsman-product
     - get: config
     - get: state
-  - task: credhub-interpolate-config
-    image: platform-automation-image
-    file: platform-automation-tasks/tasks/credhub-interpolate.yml
-    params:
-      CREDHUB_CA_CERT: ((credhub-ca-cert))
-      CREDHUB_CLIENT: ((credhub-client))
-      CREDHUB_SECRET: ((credhub-secret))
-      CREDHUB_SERVER: ((credhub-server))
-      PREFIX: /concourse/main
-      INTERPOLATION_PATH: ((config-dir))
-    input_mapping:
-      files: config
-    output_mapping:
-      interpolated-files: config
+  - *credhub-interpolate-config
   - task: create-vm
     image: platform-automation-image
     file: platform-automation-tasks/tasks/create-vm.yml
@@ -315,20 +277,7 @@ jobs:
         unpack: true
     - get: config
     - get: pks-product
-  - task: credhub-interpolate-config
-    image: platform-automation-image
-    file: platform-automation-tasks/tasks/credhub-interpolate.yml
-    params:
-      CREDHUB_CA_CERT: ((credhub-ca-cert))
-      CREDHUB_CLIENT: ((credhub-client))
-      CREDHUB_SECRET: ((credhub-secret))
-      CREDHUB_SERVER: ((credhub-server))
-      PREFIX: /concourse/main
-      INTERPOLATION_PATH: ((config-dir))
-    input_mapping:
-      files: config
-    output_mapping:
-      interpolated-files: config
+  - *credhub-interpolate-config
   - task: upload-and-stage-pks
     image: platform-automation-image
     file: platform-automation-tasks/tasks/upload-and-stage-product.yml
@@ -360,20 +309,7 @@ jobs:
         unpack: true
     - get: config
     - get: harbor-product
-  - task: credhub-interpolate-config
-    image: platform-automation-image
-    file: platform-automation-tasks/tasks/credhub-interpolate.yml
-    params:
-      CREDHUB_CA_CERT: ((credhub-ca-cert))
-      CREDHUB_CLIENT: ((credhub-client))
-      CREDHUB_SECRET: ((credhub-secret))
-      CREDHUB_SERVER: ((credhub-server))
-      PREFIX: /concourse/main
-      INTERPOLATION_PATH: ((config-dir))
-    input_mapping:
-      files: config
-    output_mapping:
-      interpolated-files: config
+  - *credhub-interpolate-config
   - task: upload-and-stage-harbor
     image: platform-automation-image
     file: platform-automation-tasks/tasks/upload-and-stage-product.yml
