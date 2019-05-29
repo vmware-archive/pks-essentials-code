@@ -56,5 +56,6 @@ properties-configuration:
     auth_json: ((gcp-credentials))
   security_configuration:
     trusted_certificates: ((pks-cert.ca))
+resource-configuration:
   compilation:
     instances: 8
