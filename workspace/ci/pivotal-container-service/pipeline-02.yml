@@ -180,10 +180,6 @@ jobs:
     - get: config
     - get: state
   - *credhub-interpolate-config
-    input_mapping:
-      files: config
-    output_mapping:
-      interpolated-files: config
   - task: create-vm
     image: platform-automation-image
     file: platform-automation-tasks/tasks/create-vm.yml
