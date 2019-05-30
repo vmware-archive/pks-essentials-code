@@ -318,8 +318,17 @@ jobs:
         unpack: true
     - get: config
     - get: harbor-product
+    - get: harbor-stemcell
   - *credhub-interpolate-config
-  - task: upload-and-stage-harbor
+  - task: upload-stemcell
+    image: platform-automation-image
+    file: platform-automation-tasks/tasks/upload-stemcell.yml
+    input_mapping:
+      env: config
+      stemcell: harbor-stemcell
+    params:
+      ENV_FILE: ((config-dir))/ops-manager/env.yml
+  - task: upload-and-stage-product
     image: platform-automation-image
     file: platform-automation-tasks/tasks/upload-and-stage-product.yml
     input_mapping:
@@ -327,7 +336,7 @@ jobs:
       product: harbor-product
     params:
       ENV_FILE: ((config-dir))/ops-manager/env.yml
-  - task: configure-harbor
+  - task: configure-product
     image: platform-automation-image
     file: platform-automation-tasks/tasks/configure-product.yml
     input_mapping:
