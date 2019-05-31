@@ -91,7 +91,7 @@ jobs:
   plan:
   - get: platform-automation-pivnet
     trigger: true
-  - aggregate:
+  - in_parallel:
     - put: platform-automation-tasks
       params:
         file: platform-automation-pivnet/*tasks*.zip
@@ -101,7 +101,7 @@ jobs:
 
 - name: fetch-opsman
   plan:
-  - aggregate:
+  - in_parallel:
     - get: daily-trigger
       trigger: true
     - get: platform-automation-image
@@ -131,14 +131,14 @@ jobs:
     file: platform-automation-tasks/tasks/download-product.yml
     params:
       CONFIG_FILE: ((config-dir))/ops-manager/config-pivnet.yml
-  - aggregate:
+  - in_parallel:
     - put: opsman-product
       params:
         file: downloaded-product/*
 
 - name: fetch-pks
   plan:
-  - aggregate:
+  - in_parallel:
     - get: daily-trigger
       trigger: true
     - get: platform-automation-image
@@ -155,7 +155,7 @@ jobs:
     params:
       CONFIG_FILE: ((config-dir))/pivotal-container-service/config-pivnet.yml
     output_mapping: {downloaded-stemcell: pks-stemcell}
-  - aggregate:
+  - in_parallel:
     - put: pks-product
       params:
         file: downloaded-product/*.pivotal
@@ -167,7 +167,7 @@ jobs:
   serial: true
   serial_groups: [ install ]
   plan:
-  - aggregate:
+  - in_parallel:
     - get: platform-automation-image
       params:
         unpack: true
@@ -222,7 +222,7 @@ jobs:
 
 - name: upload-and-configure-pks
   plan:
-  - aggregate:
+  - in_parallel:
     - get: platform-automation-image
       passed:
       - install-opsman
@@ -264,7 +264,7 @@ jobs:
 - name: apply-product-changes
   serial: true
   plan:
-  - aggregate:
+  - in_parallel:
     - get: platform-automation-image
       params:
         unpack: true
